@@ -1,0 +1,1087 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Access Insight Medicine, LLC - AI-Based Patient Health Tool</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600&display=swap');
+
+        :root {
+            --bg-color: #030014;
+            --primary-glow: #00f5c3;
+            --secondary-glow: #00bfff;
+            --text-primary: #e5e7eb;
+            --text-secondary: #b0b8c4;
+            --card-bg: rgba(10, 10, 25, 0.5);
+            --border-color: rgba(255, 255, 255, 0.1);
+            --font-heading: 'Syne', sans-serif;
+            --font-body: 'Inter', sans-serif;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html {
+            scroll-behavior: smooth;
+            font-size: 18px;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 140 100'%3E%3Cpath stroke='%2300f5c3' stroke-width='16' fill='none' stroke-linecap='round' d='M20 95 L50 5 L80 95' /%3E%3Cpath stroke='%2300f5c3' stroke-width='16' fill='none' stroke-linecap='round' d='M105 95 L105 5' /%3E%3Cpath stroke='%2300bfff' stroke-width='8' fill='none' stroke-linecap='round' d='M35 65 L 50 45 L 65 65 L 80 45 L 95 65 L 105 65' /%3E%3C/svg%3E") 16 16, auto;
+        }
+
+        a:hover, button:hover {
+            cursor: pointer;
+        }
+
+        #bg-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .main-nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem 2rem;
+            background: rgba(3, 0, 20, 0.5);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            z-index: 100;
+        }
+        
+        .nav-logo-link {
+            position: absolute;
+            left: 2rem;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .nav-logo {
+            width: 52px;
+            height: 52px;
+            cursor: pointer;
+            transition: filter 0.3s ease;
+        }
+        .nav-logo:hover {
+            filter: drop-shadow(0 0 8px var(--primary-glow));
+        }
+        
+        .logo-a-part, .logo-i-part {
+            stroke-width: 16;
+            fill: none;
+            stroke-linecap: round;
+            stroke: var(--text-primary);
+            transition: stroke 0.3s ease;
+        }
+        .nav-logo:hover .logo-a-part, .nav-logo:hover .logo-i-part {
+            stroke: var(--primary-glow);
+        }
+
+        .logo-m-part {
+            stroke-width: 8;
+            fill: none;
+            stroke-linecap: round;
+            stroke-dasharray: 140;
+            stroke-dashoffset: 140;
+            animation: draw-m-pulse 3.5s ease-in-out infinite;
+            stroke: var(--primary-glow);
+        }
+
+        @keyframes draw-m-pulse {
+             0% { stroke-dashoffset: 140; opacity: 1; }
+            40% { stroke-dashoffset: 0; opacity: 1; }
+            80% { stroke-dashoffset: 0; opacity: 0; }
+            100% { stroke-dashoffset: 140; opacity: 0; }
+        }
+
+
+        .nav-links a {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            margin: 0 0.5rem;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+        .nav-links a:hover,
+        .nav-links a.active {
+            color: var(--primary-glow);
+            text-shadow: 0 0 10px var(--primary-glow);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: var(--primary-glow);
+            transition: width 0.3s ease;
+        }
+        .nav-links a.active::after,
+        .nav-links a:hover::after {
+            width: 100%;
+        }
+
+        .page {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            min-height: 100vh;
+            padding: 140px 5% 5rem;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+        }
+        .page.active {
+            opacity: 1;
+            pointer-events: all;
+            position: relative; 
+        }
+        
+        .page-content-wrapper {
+            max-width: 1200px;
+            width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .header-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            min-height: calc(100vh - 140px);
+        }
+
+        .logo-container {
+            width: 200px;
+            height: 200px;
+            margin-bottom: 2rem;
+        }
+        
+        .main-logo-svg {
+            width: 100%;
+            height: 100%;
+            animation: subtle-glow 4s ease-in-out infinite;
+        }
+        .main-logo-svg .logo-a-part, .main-logo-svg .logo-i-part {
+            stroke: url(#logo-gradient);
+        }
+        .main-logo-svg .logo-m-part {
+            stroke: var(--secondary-glow);
+            animation-delay: 0.5s;
+        }
+
+
+        @keyframes subtle-glow {
+            0%, 100% {
+                filter: drop-shadow(0 0 8px var(--primary-glow));
+            }
+            50% {
+                filter: drop-shadow(0 0 20px var(--secondary-glow));
+            }
+        }
+
+        h1, h2 {
+            font-family: var(--font-heading);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            background: linear-gradient(90deg, var(--primary-glow), var(--secondary-glow));
+            -webkit-background-clip: text;
+            -moz-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            -webkit-text-fill-color: transparent;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: clamp(3.2rem, 8vw, 6rem);
+            margin-bottom: 1rem;
+        }
+
+        h2 {
+            font-size: clamp(2.7rem, 6vw, 4.4rem);
+            margin-bottom: 2.5rem;
+        }
+
+        h3 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: clamp(2rem, 4.5vw, 2.8rem);
+            color: var(--text-primary);
+            margin-bottom: 2rem;
+            text-align: center;
+        }
+        
+        .subtitle, .tagline {
+            max-width: 750px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+        .subtitle { font-size: clamp(1.2rem, 2.8vw, 1.5rem); color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .tagline { font-family: var(--font-heading); font-weight: 700; font-size: clamp(1.3rem, 3.2vw, 1.9rem); color: var(--primary-glow); text-shadow: 0 0 15px rgba(0, 245, 195, 0.3); margin-bottom: 3rem;}
+
+        .card {
+            position: relative;
+            background: var(--card-bg);
+            backdrop-filter: blur(12px) saturate(150%);
+            -webkit-backdrop-filter: blur(12px) saturate(150%);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 3rem;
+            width: 100%;
+            margin-bottom: 2rem;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .card.in-view { 
+            opacity: 1; 
+            transform: translateY(0); 
+        }
+
+        .card p {
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 1rem;
+            max-width: 800px;
+            font-size: 1.15rem;
+            text-align: center;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .btn {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.15rem;
+            color: var(--bg-color);
+            background: var(--primary-glow);
+            border: none;
+            border-radius: 50px;
+            padding: 1.2rem 3rem;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            text-decoration: none;
+            display: inline-block;
+            animation: pulse-button 2s infinite;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 25px var(--primary-glow);
+            animation-play-state: paused;
+        }
+
+        @keyframes pulse-button {
+            0% { box-shadow: 0 0 0 0 rgba(0, 245, 195, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(0, 245, 195, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(0, 245, 195, 0); }
+        }
+        
+        /* Styles for Tool Page */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+        }
+
+        .feature-node {
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 2.5rem;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .feature-node:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2), 0 0 15px var(--secondary-glow);
+        }
+
+        .feature-node-icon {
+            margin-bottom: 1.5rem;
+            color: var(--primary-glow);
+            height: 52px;
+            display: inline-block;
+        }
+        .feature-node-icon svg {
+            width: 52px;
+            height: 52px;
+        }
+
+        .feature-node-text h4 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            margin-bottom: 0.75rem;
+        }
+
+        .feature-node-text p {
+            font-size: 1.05rem;
+            line-height: 1.7;
+        }
+
+        .development-notice {
+            font-weight: 500;
+            color: var(--primary-glow);
+            text-shadow: 0 0 8px rgba(0, 245, 195, 0.5);
+            border: 1px solid var(--primary-glow);
+            padding: 1.25rem;
+            border-radius: 12px;
+            background: rgba(0, 245, 195, 0.1);
+            margin-top: 1rem;
+        }
+
+        /* Styles for About Page Section */
+        .mission-card {
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 25px rgba(0, 245, 195, 0.2);
+        }
+        .mission-card p {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+
+
+        .focus-areas-title, .design-features-title {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.4rem;
+            color: var(--text-primary);
+            text-align: center;
+            margin-top: 2rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .focus-areas-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.5rem;
+            width: 100%;
+        }
+
+        .focus-area-item {
+            background: rgba(0, 245, 195, 0.05);
+            border: 1px solid rgba(0, 245, 195, 0.2);
+            border-radius: 12px;
+            padding: 1.2rem;
+            text-align: center;
+            color: var(--text-secondary);
+            font-weight: 500;
+            transition: background-color 0.3s ease, color 0.3s ease, transform 0.3s ease;
+        }
+
+        .focus-area-item:hover {
+            background-color: rgba(0, 245, 195, 0.2);
+            color: var(--text-primary);
+            transform: translateY(-3px);
+        }
+
+        /* Styles for objectives */
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+            margin-bottom: 2.5rem;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 1.5rem;
+        }
+        
+        .objective-icon {
+            color: var(--primary-glow);
+            flex-shrink: 0;
+            margin-top: -2px;
+        }
+        .objective-icon svg {
+            width: 36px;
+            height: 36px;
+        }
+        
+        .objective-text h4 {
+            font-family: var(--font-heading);
+            font-weight: 700;
+            font-size: 1.3rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            text-align: left;
+        }
+        
+        .objective-text p {
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+            line-height: 1.7;
+            text-align: left;
+            margin-bottom: 0;
+        }
+
+        .design-features-list {
+            list-style-type: none;
+            padding-left: 0;
+            text-align: center;
+        }
+
+        .design-features-list li {
+            display: inline-block;
+            background: rgba(0,0,0,0.2);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1.5rem;
+            margin: 0.3rem;
+            border-radius: 20px;
+            font-size: 1.05rem;
+            font-weight: 500;
+        }
+        
+        /* Styles for Team Page */
+        .team-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2.5rem;
+            width: 100%;
+        }
+
+        .team-member {
+            text-align: center;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 2.5rem;
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .team-member:hover {
+            transform: translateY(-10px);
+            background: var(--card-bg);
+            box-shadow: 0 0 20px rgba(0, 245, 195, 0.2);
+        }
+
+        .team-member-avatar {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            margin: 0 auto 2rem;
+            background: linear-gradient(45deg, var(--primary-glow), var(--secondary-glow));
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-heading);
+            font-weight: 800;
+            font-size: 3rem;
+            color: var(--bg-color);
+        }
+        
+        .team-member h4 {
+            font-family: var(--font-heading);
+            color: var(--text-primary);
+            font-size: 1.7rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .team-member p {
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            margin-bottom: 1rem;
+        }
+         .team-member .bio {
+            font-size: 1rem;
+            font-style: italic;
+            color: var(--text-secondary);
+        }
+        
+        /* Improved Contact Form Styles */
+        .form-group {
+            margin-bottom: 2rem;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 0.75rem;
+            color: var(--text-primary);
+            font-weight: 500;
+            font-size: 1.15rem;
+        }
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 1.2rem;
+            background: rgba(0,0,0,0.3);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-family: var(--font-body);
+            font-size: 1.15rem;
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .form-group input:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-glow);
+            box-shadow: 0 0 15px rgba(0, 245, 195, 0.4);
+        }
+        .form-group textarea {
+            min-height: 180px;
+            resize: vertical;
+        }
+
+        .contact-email {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+            margin-bottom: 2rem;
+            text-decoration: none;
+            color: var(--text-secondary);
+            font-size: 1.15rem;
+            transition: color 0.3s ease;
+        }
+
+        .contact-email:hover {
+            color: var(--primary-glow);
+        }
+
+        .contact-email svg {
+            width: 28px;
+            height: 28px;
+        }
+
+
+        @media (max-width: 768px) {
+            html {
+                font-size: 16px;
+            }
+            .main-nav {
+                padding: 1rem;
+                justify-content: space-between;
+            }
+            .nav-logo-link {
+                position: static;
+                transform: none;
+            }
+            .nav-links {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                width: 100%;
+                display: flex;
+                justify-content: space-around;
+                background: rgba(3, 0, 20, 0.8);
+                backdrop-filter: blur(10px);
+                border-top: 1px solid var(--border-color);
+                padding: 0.5rem 0;
+            }
+            .nav-links a {
+                margin: 0;
+                font-size: 1.05rem;
+            }
+            .page {
+                padding: 100px 5% 100px;
+            }
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="bg-canvas"></canvas>
+
+    <!-- SVG Definitions for Gradients and Logos -->
+    <svg width="0" height="0" style="position:absolute">
+        <defs>
+            <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:var(--primary-glow);stop-opacity:1" />
+                <stop offset="100%" style="stop-color:var(--secondary-glow);stop-opacity:1" />
+            </linearGradient>
+            <!-- New Animated Logo -->
+            <symbol id="icon-logo-main" viewBox="0 0 140 100">
+                <path class="logo-a-part" d="M20 95 L50 5 L80 95" />
+                <path class="logo-i-part" d="M105 95 L105 5" />
+                <path class="logo-m-part" d="M35 65 L 50 45 L 65 65 L 80 45 L 95 65 L 105 65" />
+            </symbol>
+            <!-- General Icons -->
+            <symbol id="icon-user" viewBox="0 0 24 24"><path fill="currentColor" d="M12,12A5,5,0,1,0,7,7,5,5,0,0,0,12,12Zm0,2c-2.67,0-8,1.34-8,4v2H20V18C20,15.34,14.67,14,12,14Z"/></symbol>
+            <symbol id="icon-mail" viewBox="0 0 24 24"><path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></symbol>
+            <!-- Tool Page Icons -->
+            <symbol id="icon-ai-brain" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-10 10c0 4.42 2.87 8.17 6.84 9.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.89 1.53 2.34 1.09 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94a3.87 3.87 0 0 1 1.03-2.69a3.59 3.59 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02a3.59 3.59 0 0 1 .1 2.64a3.87 3.87 0 0 1 1.03 2.69c0 3.84-2.34 4.68-4.57 4.93c.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 22 12A10 10 0 0 0 12 2Z"/></symbol>
+            <symbol id="icon-globe-nodes" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93s3.05-7.44 7-7.93v15.86zm2-15.86c3.95.49 7 3.85 7 7.93s-3.05 7.44-7 7.93V4.07z"/></symbol>
+            <symbol id="icon-mobile" viewBox="0 0 24 24"><path fill="currentColor" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></symbol>
+            <symbol id="icon-book-glow" viewBox="0 0 24 24"><path fill="currentColor" d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
+            <symbol id="icon-workflow" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"/></symbol>
+            <symbol id="icon-reading-level" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5s5 2.24 5 5s-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3s3-1.34 3-3s-1.34-3-3-3z"/></symbol>
+            <!-- About Us Page Icons -->
+            <symbol id="icon-clipboard-chart" viewBox="0 0 24 24"><path fill="currentColor" d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1zm2 14H7v-2h8v2zm3-4H7v-2h11v2zm0-4H7V7h11v2z"/></symbol>
+            <symbol id="icon-pill-question" viewBox="0 0 24 24"><path fill="currentColor" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5c0-2.21-1.79-4-4-4z"/></symbol>
+            <symbol id="icon-drug-interaction" viewBox="0 0 24 24"><path fill="currentColor" d="M13 13h-2v-2h2v2zm0-4h-2V5h2v4zm7.95-6.5L12.7.25C12.31-.08 11.69-.08 11.3.25L2.05 9.5c-.39.39-.39 1.02 0 1.41l9.25 9.25c.39.39 1.02.39 1.41 0l9.25-9.25c.39-.39.39-1.02 0-1.41zM12 20.59L3.41 12 12 3.41 20.59 12 12 20.59z"/></symbol>
+            <symbol id="icon-stethoscope" viewBox="0 0 24 24"><path fill="currentColor" d="M3 3v2c0 2.21 1.79 4 4 4h1v1H7c-2.21 0-4 1.79-4 4v2h2v-2c0-1.1.9-2 2-2h1v-1H7c-1.1 0-2-.9-2-2V5h2V3H3zm18 0v2h-2V5h2v10c0 1.1-.9 2-2 2h-1v1h1c2.21 0 4-1.79 4-4V3h-2zM12 9c-2.76 0-5 2.24-5 5s2.24 5 5 5s5-2.24 5-5s-2.24-5-5-5zm0 8c-1.66 0-3-1.34-3-3s1.34-3 3-3s3 1.34 3 3s-1.34 3-3-3z"/></symbol>
+        </defs>
+    </svg>
+
+    <nav class="main-nav">
+        <a href="#home" class="nav-logo-link">
+            <svg class="nav-logo" viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+                <use href="#icon-logo-main"/>
+            </svg>
+        </a>
+        <div class="nav-links">
+            <a href="#home" class="active">Home</a>
+            <a href="#tool">The Tool</a>
+            <a href="#about">About Us</a>
+            <a href="#team">Our Team</a>
+            <a href="#contact">Contact</a>
+        </div>
+    </nav>
+
+    <main>
+        <!-- Home Page -->
+        <section id="home" class="page active">
+            <div class="page-content-wrapper">
+                 <div class="header-content">
+                    <div class="logo-container">
+                        <svg class="main-logo-svg" viewBox="0 0 140 100" xmlns="http://www.w3.org/2000/svg">
+                            <use href="#icon-logo-main" />
+                        </svg>
+                    </div>
+                    <h1>Access Insight Medicine</h1>
+                    <p class="subtitle">Revolutionizing Patient Care Through Artificial Intelligence</p>
+                    <p class="tagline">Your Health, Clarified.</p>
+                    <a href="#tool" class="btn page-nav-btn">Explore The Tool</a>
+                 </div>
+            </div>
+        </section>
+
+        <!-- The Tool Page -->
+        <section id="tool" class="page">
+            <div class="page-content-wrapper">
+                <h2 class="animate-on-scroll">Our Vision for the Future</h2>
+                <div class="card animate-on-scroll">
+                    <h3>The Future of Patient Empowerment</h3>
+                    <p>Our flagship application is currently under active development by our dedicated team. We are building a revolutionary tool designed to empower patients with clear, personalized, and accessible health information. Stay tuned for updates on our progress!</p>
+                     <p class="development-notice"><strong>Under Development:</strong> The features below showcase the innovative functionality we are building. The final application is not yet released.</p>
+                </div>
+                 <div class="card animate-on-scroll" data-stagger-children="true">
+                    <h3>Key Features & Innovation</h3>
+                    <div class="features-grid">
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-ai-brain"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>AI-Powered Information</h4>
+                                <p>Personalized content delivered based on individual patient needs and data.</p>
+                            </div>
+                        </div>
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-globe-nodes"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>Culturally Relevant Content</h4>
+                                <p>Specifically designed to be resonant and understandable for diverse communities.</p>
+                            </div>
+                        </div>
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-mobile"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>Mobile-First Design</h4>
+                                <p>Fully accessible and optimized for a seamless experience on smartphones and tablets.</p>
+                            </div>
+                        </div>
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-book-glow"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>Personalized Education</h4>
+                                <p>Tailored modules for specific medical conditions and treatments to improve understanding.</p>
+                            </div>
+                        </div>
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-workflow"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>Patient-Centric Workflow</h4>
+                                <p>Designed to integrate into a patient's daily routine to improve health understanding and management.</p>
+                            </div>
+                        </div>
+                        <div class="feature-node">
+                            <div class="feature-node-icon"><svg><use href="#icon-reading-level"></use></svg></div>
+                            <div class="feature-node-text">
+                                <h4>Reading Level Optimization</h4>
+                                <p>Content is intelligently adapted to appropriate literacy levels for clear communication.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Us Page -->
+        <section id="about" class="page">
+            <div class="page-content-wrapper">
+                <h2 class="animate-on-scroll">Our Mission</h2>
+                 <div class="card mission-card animate-on-scroll">
+                     <p>Access Insight Medicine, LLC was founded on the principle that advanced technology can and should be accessible to everyone seeking to better understand their health. Our team is committed to bridging the gap between complex medical data and patient comprehension.</p>
+                    <p>Our proprietary AI models are trained on vast, anonymized datasets to identify patterns and correlations that can offer valuable context to your health picture. We believe in empowering patients and clinicians with clear, insightful, and actionable information.</p>
+                </div>
+
+                <div class="card animate-on-scroll" data-stagger-children="true">
+                    <h3>Core Objectives</h3>
+                    <p>Our AI-driven patient education tool is designed with specific objectives to transform healthcare accessibility:</p>
+                    <div class="objectives-grid" style="margin-top: 2rem;">
+                        <div class="objective-item">
+                            <div class="objective-icon"><svg><use href="#icon-clipboard-chart"></use></svg></div>
+                            <div class="objective-text">
+                                <h4>Summarizing Patient Medical Data</h4>
+                                <p>Condensing complex medical histories into easily understandable summaries that enhance patient comprehension.</p>
+                            </div>
+                        </div>
+                         <div class="objective-item">
+                            <div class="objective-icon"><svg><use href="#icon-pill-question"></use></svg></div>
+                            <div class="objective-text">
+                                <h4>Explaining Medication Rationales</h4>
+                                <p>Offering clear explanations of why specific medications are prescribed, improving medication adherence and understanding.</p>
+                            </div>
+                        </div>
+                         <div class="objective-item">
+                            <div class="objective-icon"><svg><use href="#icon-drug-interaction"></use></svg></div>
+                            <div class="objective-text">
+                                <h4>Drug Interaction Awareness</h4>
+                                <p>Identifying potential adverse interactions that patients should be aware of to prevent complications.</p>
+                            </div>
+                        </div>
+                         <div class="objective-item">
+                            <div class="objective-icon"><svg><use href="#icon-stethoscope"></use></svg></div>
+                            <div class="objective-text">
+                                <h4>Side Effect Education</h4>
+                                <p>Informing patients about possible adverse side effects of their medications with clear, actionable guidance.</p>
+                            </div>
+                        </div>
+                         <div class="objective-item">
+                            <div class="objective-icon"><svg><use href="#icon-pill-question"></use></svg></div>
+                            <div class="objective-text">
+                                <h4>Follow-up Preparation</h4>
+                                <p>Equipping patients with pertinent questions to ask during future healthcare appointments for better engagement.</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <h4 class="design-features-title">Key Design Features</h4>
+                    <ul class="design-features-list">
+                        <li>Appropriate Reading Level</li>
+                        <li>Accessible Information</li>
+                        <li>Enhanced Understanding</li>
+                        <li>Patient Advocacy</li>
+                    </ul>
+                </div>
+
+                <div class="card animate-on-scroll" data-stagger-children="true">
+                    <h3>Addressing Health Disparities</h3>
+                    <p><strong>Why This Matters</strong><br>Many communities face significant health challenges and disparities. Our AI-based patient education tool specifically targets prevalent chronic conditions to make the greatest impact on community health.</p>
+                    
+                    <h4 class="focus-areas-title">Primary Intervention Focus Areas</h4>
+                    <div class="focus-areas-grid">
+                        <div class="focus-area-item">Diabetes Management</div>
+                        <div class="focus-area-item">COPD Education</div>
+                        <div class="focus-area-item">Obesity Prevention</div>
+                        <div class="focus-area-item">Cardiovascular Health</div>
+                        <div class="focus-area-item">Improving Healthcare Access</div>
+                        <div class="focus-area-item">Physical Activity</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- Our Team Page -->
+        <section id="team" class="page">
+            <div class="page-content-wrapper">
+                <h2 class="animate-on-scroll">Our Team</h2>
+                <div class="card animate-on-scroll">
+                    <p>Led by medical students at the<br><strong>Marshall University Joan C. Edwards School of Medicine</strong></p>
+                </div>
+                <div class="card animate-on-scroll" data-stagger-children="true">
+                    <div class="team-grid">
+                        <div class="team-member">
+                            <div class="team-member-avatar">BA</div>
+                            <h4>Bukola Adeshina</h4>
+                            <p>Medical Student</p>
+                            <p class="bio">"Passionate about leveraging technology to improve patient outcomes."</p>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-member-avatar">RA</div>
+                            <h4>Raza Ahmed</h4>
+                            <p>Medical Student</p>
+                            <p class="bio">"Dedicated to making complex health information accessible to all."</p>
+                        </div>
+                        <div class="team-member">
+                            <div class="team-member-avatar">JE</div>
+                            <h4>Joshua Eastman</h4>
+                            <p>Medical Student</p>
+                            <p class="bio">"Focused on the intersection of medicine, data, and clear communication."</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Page -->
+        <section id="contact" class="page">
+            <div class="page-content-wrapper">
+                <h2 class="animate-on-scroll">Get In Touch</h2>
+                <div class="card animate-on-scroll">
+                    <p>We would love to hear your thoughts, partnership inquiries, or creative ideas. Whether you have feedback or want to collaborate, don't hesitate to reach out.</p>
+
+                    <a href="mailto:info@accessinsightmed.com" class="contact-email">
+                        <svg><use href="#icon-mail"></use></svg>
+                        <span>info@accessinsightmed.com</span>
+                    </a>
+                    
+                    <p style="font-size: 1rem; margin-bottom: 2rem;">Or, fill out the form below:</p>
+
+                    <form id="contact-form" style="text-align:left; max-width: 600px; margin: 0 auto;">
+                         <div class="form-group">
+                            <label for="name">Your Name</label>
+                            <input type="text" id="name" name="name" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="email">Your Email</label>
+                            <input type="email" id="email" name="email" required>
+                        </div>
+                         <div class="form-group">
+                            <label for="subject">Subject</label>
+                            <input type="text" id="subject" name="subject" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="message">Message</label>
+                            <textarea id="message" name="message" required></textarea>
+                        </div>
+                        <div style="text-align:center;">
+                            <button type="submit" class="btn" style="width: 100%;">Send Message</button>
+                        </div>
+                    </form>
+                     <p id="form-status" style="margin-top: 1.5rem; text-align:center; font-size: 1.15rem;"></p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            
+            // --- Background Canvas Animation ---
+            const canvas = document.getElementById('bg-canvas');
+            const ctx = canvas.getContext('2d');
+            let particlesArray;
+
+            function setCanvasSize() {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+
+            // Particle class
+            class Particle {
+                constructor(x, y, directionX, directionY, size, color) {
+                    this.x = x;
+                    this.y = y;
+                    this.directionX = directionX;
+                    this.directionY = directionY;
+                    this.size = size;
+                    this.color = color;
+                }
+                draw() {
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2, false);
+                    ctx.fillStyle = this.color;
+                    ctx.fill();
+                }
+                update() {
+                    if (this.x > canvas.width || this.x < 0) {
+                        this.directionX = -this.directionX;
+                    }
+                    if (this.y > canvas.height || this.y < 0) {
+                        this.directionY = -this.directionY;
+                    }
+                    this.x += this.directionX;
+                    this.y += this.directionY;
+                    this.draw();
+                }
+            }
+            
+            // Create particles
+            function init() {
+                setCanvasSize();
+                particlesArray = [];
+                let numberOfParticles = (canvas.height * canvas.width) / 9000;
+                for (let i = 0; i < numberOfParticles; i++) {
+                    let size = (Math.random() * 2) + 1;
+                    let x = (Math.random() * ((innerWidth - size * 2) - (size * 2)) + size * 2);
+                    let y = (Math.random() * ((innerHeight - size * 2) - (size * 2)) + size * 2);
+                    let directionX = (Math.random() * .4) - .2;
+                    let directionY = (Math.random() * .4) - .2;
+                    let color = 'rgba(0, 245, 195, 0.3)';
+                    particlesArray.push(new Particle(x, y, directionX, directionY, size, color));
+                }
+            }
+
+            // Animation loop
+            function animate() {
+                requestAnimationFrame(animate);
+                ctx.clearRect(0,0,innerWidth, innerHeight);
+
+                for (let i = 0; i < particlesArray.length; i++) {
+                    particlesArray[i].update();
+                }
+                connect();
+            }
+
+            // Connect particles with lines
+            function connect() {
+                let opacityValue = 1;
+                for (let a = 0; a < particlesArray.length; a++) {
+                    for (let b = a; b < particlesArray.length; b++) {
+                        let distance = ((particlesArray[a].x - particlesArray[b].x) * (particlesArray[a].x - particlesArray[b].x))
+                                     + ((particlesArray[a].y - particlesArray[b].y) * (particlesArray[a].y - particlesArray[b].y));
+                        if (distance < (canvas.width/7) * (canvas.height/7)) {
+                            opacityValue = 1 - (distance/20000);
+                            ctx.strokeStyle='rgba(0, 191, 255,' + opacityValue + ')';
+                            ctx.lineWidth = 1;
+                            ctx.beginPath();
+                            ctx.moveTo(particlesArray[a].x, particlesArray[a].y);
+                            ctx.lineTo(particlesArray[b].x, particlesArray[b].y);
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+            
+            window.addEventListener('resize', function() {
+                init();
+            });
+
+            init();
+            animate();
+
+
+            // --- Single Page Navigation ---
+            const navContainer = document.querySelector('.main-nav');
+            const navLinks = document.querySelectorAll('.nav-links a');
+            const pageNavButtons = document.querySelectorAll('.page-nav-btn');
+            const pages = document.querySelectorAll('.page');
+            const logoLink = document.querySelector('.nav-logo-link');
+
+            function showPage(targetId) {
+                // Remove '#' from the beginning
+                const cleanTargetId = targetId.startsWith('#') ? targetId.substring(1) : targetId;
+
+                pages.forEach(page => {
+                    page.classList.remove('active');
+                    if (page.id !== cleanTargetId) {
+                        page.style.display = 'none';
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href') === `#${cleanTargetId}`) {
+                        link.classList.add('active');
+                    }
+                });
+                
+                const targetPage = document.getElementById(cleanTargetId);
+                if (targetPage) {
+                    targetPage.style.display = 'flex';
+                    setTimeout(() => {
+                         targetPage.classList.add('active');
+                         // Trigger animations for the new page
+                         triggerAnimations(targetPage);
+                    }, 10);
+                }
+            }
+            
+            function triggerAnimations(page) {
+                const elementsToAnimate = page.querySelectorAll('.animate-on-scroll, .card, h2, h3');
+                elementsToAnimate.forEach(el => observer.observe(el));
+            }
+
+            function handleNavClick(e) {
+                e.preventDefault();
+                const targetLink = e.target.closest('a');
+                if (!targetLink) return;
+
+                const targetId = targetLink.getAttribute('href');
+                showPage(targetId);
+                 window.scrollTo(0, 0);
+            }
+
+            // Attach listeners
+            navContainer.addEventListener('click', handleNavClick);
+            pageNavButtons.forEach(btn => btn.addEventListener('click', handleNavClick));
+            
+            // Initial page setup
+            pages.forEach(page => {
+                 if (!page.classList.contains('active')) {
+                     page.style.display = 'none';
+                 }
+            });
+            
+            // --- Form Handling ---
+            const contactForm = document.getElementById('contact-form');
+            const formStatus = document.getElementById('form-status');
+            
+            contactForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                formStatus.style.color = 'var(--primary-glow)';
+                formStatus.textContent = 'Sending message...';
+                
+                setTimeout(() => {
+                    formStatus.textContent = 'Thank you! Your message has been sent.';
+                    contactForm.reset();
+                }, 1500);
+            });
+            
+            // --- Scroll Animations ---
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('in-view');
+                    }
+                });
+            }, { threshold: 0.1 });
+
+             document.querySelectorAll('.animate-on-scroll, .card, h2, h3').forEach(el => {
+                observer.observe(el);
+            });
+        });
+    </script>
+</body>
+</html>
