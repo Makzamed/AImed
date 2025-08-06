@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Access Insight Medicine, LLC - AI-Based Patient Health Tool</title>
+    <title>Access Insight, LLC - AI-Based Patient Health Tool</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Inter:wght@400;500;600&display=swap');
 
@@ -33,7 +33,6 @@
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
             -moz-osx-font-smoothing: grayscale;
-            cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='32' height='32' viewBox='0 0 140 100'%3E%3Cpath stroke='%2300f5c3' stroke-width='16' fill='none' stroke-linecap='round' d='M20 95 L50 5 L80 95' /%3E%3Cpath stroke='%2300f5c3' stroke-width='16' fill='none' stroke-linecap='round' d='M105 95 L105 5' /%3E%3Cpath stroke='%2300bfff' stroke-width='8' fill='none' stroke-linecap='round' d='M35 65 L 50 45 L 65 65 L 80 45 L 95 65 L 105 65' /%3E%3C/svg%3E") 16 16, auto;
         }
 
         a:hover, button:hover {
@@ -104,7 +103,7 @@
         }
 
         @keyframes draw-m-pulse {
-             0% { stroke-dashoffset: 140; opacity: 1; }
+            0% { stroke-dashoffset: 140; opacity: 1; }
             40% { stroke-dashoffset: 0; opacity: 1; }
             80% { stroke-dashoffset: 0; opacity: 0; }
             100% { stroke-dashoffset: 140; opacity: 0; }
@@ -540,7 +539,8 @@
             font-size: 1.15rem;
         }
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 1.2rem;
             background: rgba(0,0,0,0.3);
@@ -552,7 +552,8 @@
             transition: border-color 0.3s ease, box-shadow 0.3s ease;
         }
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--primary-glow);
             box-shadow: 0 0 15px rgba(0, 245, 195, 0.4);
@@ -623,30 +624,25 @@
 
     <canvas id="bg-canvas"></canvas>
 
-    <!-- SVG Definitions for Gradients and Logos -->
     <svg width="0" height="0" style="position:absolute">
         <defs>
             <linearGradient id="logo-gradient" x1="0%" y1="0%" x2="100%" y2="100%">
                 <stop offset="0%" style="stop-color:var(--primary-glow);stop-opacity:1" />
                 <stop offset="100%" style="stop-color:var(--secondary-glow);stop-opacity:1" />
             </linearGradient>
-            <!-- New Animated Logo -->
             <symbol id="icon-logo-main" viewBox="0 0 140 100">
                 <path class="logo-a-part" d="M20 95 L50 5 L80 95" />
                 <path class="logo-i-part" d="M105 95 L105 5" />
                 <path class="logo-m-part" d="M35 65 L 50 45 L 65 65 L 80 45 L 95 65 L 105 65" />
             </symbol>
-            <!-- General Icons -->
             <symbol id="icon-user" viewBox="0 0 24 24"><path fill="currentColor" d="M12,12A5,5,0,1,0,7,7,5,5,0,0,0,12,12Zm0,2c-2.67,0-8,1.34-8,4v2H20V18C20,15.34,14.67,14,12,14Z"/></symbol>
             <symbol id="icon-mail" viewBox="0 0 24 24"><path fill="currentColor" d="M22 6c0-1.1-.9-2-2-2H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6zm-2 0l-8 5-8-5h16zm0 12H4V8l8 5 8-5v10z"/></symbol>
-            <!-- Tool Page Icons -->
             <symbol id="icon-ai-brain" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2a10 10 0 0 0-10 10c0 4.42 2.87 8.17 6.84 9.5c.5.09.68-.22.68-.48v-1.7c-2.78.6-3.37-1.34-3.37-1.34c-.46-1.16-1.11-1.47-1.11-1.47c-.91-.62.07-.6.07-.6c1 .07 1.53 1.03 1.53 1.03c.89 1.53 2.34 1.09 2.91.83c.09-.65.35-1.09.63-1.34c-2.22-.25-4.55-1.11-4.55-4.94a3.87 3.87 0 0 1 1.03-2.69a3.59 3.59 0 0 1 .1-2.64s.84-.27 2.75 1.02a9.58 9.58 0 0 1 5 0c1.91-1.29 2.75-1.02 2.75-1.02a3.59 3.59 0 0 1 .1 2.64a3.87 3.87 0 0 1 1.03 2.69c0 3.84-2.34 4.68-4.57 4.93c.36.31.68.92.68 1.85v2.74c0 .27.18.58.69.48A10 10 0 0 0 22 12A10 10 0 0 0 12 2Z"/></symbol>
             <symbol id="icon-globe-nodes" viewBox="0 0 24 24"><path fill="currentColor" d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm-1 17.93c-3.95-.49-7-3.85-7-7.93s3.05-7.44 7-7.93v15.86zm2-15.86c3.95.49 7 3.85 7 7.93s-3.05 7.44-7 7.93V4.07z"/></symbol>
             <symbol id="icon-mobile" viewBox="0 0 24 24"><path fill="currentColor" d="M17 1.01L7 1c-1.1 0-2 .9-2 2v18c0 1.1.9 2 2 2h10c1.1 0 2-.9 2-2V3c0-1.1-.9-1.99-2-1.99zM17 19H7V5h10v14z"/></symbol>
             <symbol id="icon-book-glow" viewBox="0 0 24 24"><path fill="currentColor" d="M18 2H6c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zM6 4h5v8l-2.5-1.5L6 12V4z"/></symbol>
             <symbol id="icon-workflow" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6s-2.69 6-6 6s-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8s-3.58-8-8-8z"/></symbol>
             <symbol id="icon-reading-level" viewBox="0 0 24 24"><path fill="currentColor" d="M12 4.5C7 4.5 2.73 7.61 1 12c1.73 4.39 6 7.5 11 7.5s9.27-3.11 11-7.5C21.27 7.61 17 4.5 12 4.5zm0 13c-2.76 0-5-2.24-5-5s2.24-5 5-5s5 2.24 5 5s-2.24 5-5 5zm0-8c-1.66 0-3 1.34-3 3s1.34 3 3 3s3-1.34 3-3s-1.34-3-3-3z"/></symbol>
-            <!-- About Us Page Icons -->
             <symbol id="icon-clipboard-chart" viewBox="0 0 24 24"><path fill="currentColor" d="M19 3h-4.18C14.4 1.84 13.3 1 12 1s-2.4.84-2.82 2H5c-1.1 0-2 .9-2 2v14c0 1.1.9 2 2 2h14c1.1 0 2-.9 2-2V5c0-1.1-.9-2-2-2zm-7 0c.55 0 1 .45 1 1s-.45 1-1 1s-1-.45-1-1s.45-1 1-1zm2 14H7v-2h8v2zm3-4H7v-2h11v2zm0-4H7V7h11v2z"/></symbol>
             <symbol id="icon-pill-question" viewBox="0 0 24 24"><path fill="currentColor" d="M11 18h2v-2h-2v2zm1-16C6.48 2 2 6.48 2 12s4.48 10 10 10s10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8s8 3.59 8 8s-3.59 8-8 8zm0-14c-2.21 0-4 1.79-4 4h2c0-1.1.9-2 2-2s2 .9 2 2c0 2-3 1.75-3 5h2c0-2.25 3-2.5 3-5c0-2.21-1.79-4-4-4z"/></symbol>
             <symbol id="icon-drug-interaction" viewBox="0 0 24 24"><path fill="currentColor" d="M13 13h-2v-2h2v2zm0-4h-2V5h2v4zm7.95-6.5L12.7.25C12.31-.08 11.69-.08 11.3.25L2.05 9.5c-.39.39-.39 1.02 0 1.41l9.25 9.25c.39.39 1.02.39 1.41 0l9.25-9.25c.39-.39.39-1.02 0-1.41zM12 20.59L3.41 12 12 3.41 20.59 12 12 20.59z"/></symbol>
@@ -670,7 +666,6 @@
     </nav>
 
     <main>
-        <!-- Home Page -->
         <section id="home" class="page active">
             <div class="page-content-wrapper">
                  <div class="header-content">
@@ -679,7 +674,7 @@
                             <use href="#icon-logo-main" />
                         </svg>
                     </div>
-                    <h1>Access Insight Medicine</h1>
+                    <h1>Access Insight</h1>
                     <p class="subtitle">Revolutionizing Patient Care Through Artificial Intelligence</p>
                     <p class="tagline">Your Health, Clarified.</p>
                     <a href="#tool" class="btn page-nav-btn">Explore The Tool</a>
@@ -687,7 +682,6 @@
             </div>
         </section>
 
-        <!-- The Tool Page -->
         <section id="tool" class="page">
             <div class="page-content-wrapper">
                 <h2 class="animate-on-scroll">Our Vision for the Future</h2>
@@ -746,13 +740,12 @@
             </div>
         </section>
 
-        <!-- About Us Page -->
         <section id="about" class="page">
             <div class="page-content-wrapper">
                 <h2 class="animate-on-scroll">Our Mission</h2>
                  <div class="card mission-card animate-on-scroll">
-                     <p>Access Insight Medicine, LLC was founded on the principle that advanced technology can and should be accessible to everyone seeking to better understand their health. Our team is committed to bridging the gap between complex medical data and patient comprehension.</p>
-                    <p>Our proprietary AI models are trained on vast, anonymized datasets to identify patterns and correlations that can offer valuable context to your health picture. We believe in empowering patients and clinicians with clear, insightful, and actionable information.</p>
+                     <p>Access Insight, LLC was founded on the principle that advanced technology can and should be accessible to everyone seeking to better understand their health. Our team is committed to bridging the gap between complex medical data and patient comprehension.</p>
+                    <p>We believe in empowering patients with clear, insightful, and actionable information.</p>
                 </div>
 
                 <div class="card animate-on-scroll" data-stagger-children="true">
@@ -807,22 +800,13 @@
 
                 <div class="card animate-on-scroll" data-stagger-children="true">
                     <h3>Addressing Health Disparities</h3>
-                    <p><strong>Why This Matters</strong><br>Many communities face significant health challenges and disparities. Our AI-based patient education tool specifically targets prevalent chronic conditions to make the greatest impact on community health.</p>
-                    
-                    <h4 class="focus-areas-title">Primary Intervention Focus Areas</h4>
-                    <div class="focus-areas-grid">
-                        <div class="focus-area-item">Diabetes Management</div>
-                        <div class="focus-area-item">COPD Education</div>
-                        <div class="focus-area-item">Obesity Prevention</div>
-                        <div class="focus-area-item">Cardiovascular Health</div>
-                        <div class="focus-area-item">Improving Healthcare Access</div>
-                        <div class="focus-area-item">Physical Activity</div>
+                    <p><strong>Why This Matters</strong><br>Many communities face significant health challenges and disparities.Health literacy is one of the major cause. Our AI-based patient education tool will create greatest impact on community health.</p>
+                        
                     </div>
                 </div>
             </div>
         </section>
         
-        <!-- Our Team Page -->
         <section id="team" class="page">
             <div class="page-content-wrapper">
                 <h2 class="animate-on-scroll">Our Team</h2>
@@ -854,7 +838,6 @@
             </div>
         </section>
 
-        <!-- Contact Page -->
         <section id="contact" class="page">
             <div class="page-content-wrapper">
                 <h2 class="animate-on-scroll">Get In Touch</h2>
@@ -881,6 +864,18 @@
                             <label for="subject">Subject</label>
                             <input type="text" id="subject" name="subject" required>
                         </div>
+
+                        <div class="form-group">
+                            <label for="reason">Reason for Contact</label>
+                            <select id="reason" name="reason" required>
+                                <option value="" disabled selected>Please select a reason...</option>
+                                <option value="collaboration">Collaboration</option>
+                                <option value="feedback">Feedback</option>
+                                <option value="tool-trial">Need Tool Trial</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
                         <div class="form-group">
                             <label for="message">Message</label>
                             <textarea id="message" name="message" required></textarea>
@@ -1079,7 +1074,7 @@
             }, { threshold: 0.1 });
 
              document.querySelectorAll('.animate-on-scroll, .card, h2, h3').forEach(el => {
-                observer.observe(el);
+                 observer.observe(el);
             });
         });
     </script>
