@@ -24,7 +24,7 @@
 
         html {
             scroll-behavior: smooth;
-            font-size: 100%; /* Base font size now uses percentage for better scaling */
+            font-size: 90%; /* Reduced to 90% for a smaller feel */
         }
 
         body {
@@ -137,7 +137,7 @@
         }
 
         .nav-logo {
-            height: 40px;
+            height: 55px;
             width: auto;
             cursor: pointer;
             transition: transform 0.3s ease;
@@ -208,7 +208,17 @@
             align-items: center;
             justify-content: center;
         }
+        /* --- NEW: Logo hover effect --- */
+        @keyframes logoHover {
+            0% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.05) rotate(2deg); }
+            100% { transform: scale(1) rotate(0deg); }
+        }
 
+        .logo-container:hover .main-logo-img {
+            animation: logoHover 0.8s ease-in-out;
+        }
+        
         /* --- MODIFIED: New two-column layout for the home page header --- */
         .home-hero-container {
             display: flex;
@@ -1019,3 +1029,4 @@
     </script>
 </body>
 </html>
+
