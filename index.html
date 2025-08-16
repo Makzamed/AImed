@@ -24,7 +24,7 @@
 
         html {
             scroll-behavior: smooth;
-            font-size: 100%; /* Resetting to 100% for better responsiveness at default zoom */
+            font-size: 100%;
         }
 
         body {
@@ -85,7 +85,7 @@
             70% { transform: scale(1.05); box-shadow: 0 0 0 10px rgba(26, 58, 74, 0); }
             100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(26, 58, 74, 0); }
         }
-        /* --- NEW: Logo Hover Animation --- */
+        /* --- Logo Hover Animation --- */
         @keyframes float {
             0% { transform: translateY(0); }
             50% { transform: translateY(-5px); }
@@ -219,26 +219,27 @@
             animation: logoHover 0.8s ease-in-out;
         }
         
-        /* --- MODIFIED: New two-column layout for the home page header --- */
+        /* --- MODIFIED: Tighter two-column layout for the home page header --- */
         .home-hero-container {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            gap: 2rem;
-            /* MODIFIED: Removed min-height to allow content to dictate height, fixing excess whitespace */
-            padding-top: 5rem;
-            padding-bottom: 5rem;
+            justify-content: center; /* Centering the content horizontally */
+            gap: 1.5rem; /* Reduced gap */
+            padding-top: 3rem; /* Reduced padding */
+            padding-bottom: 3rem; /* Reduced padding */
+            min-height: calc(100vh - 100px); /* Re-added min-height to ensure it fills the page on empty sections */
             width: 100%;
+            flex-wrap: wrap; /* Allow wrapping on small screens */
         }
         .home-hero-content {
-            flex: 1;
+            flex: 1 1 50%; /* Flexible sizing to allow it to grow */
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
         }
         .home-hero-logo {
-            flex: 1;
+            flex: 1 1 40%; /* Flexible sizing for the logo column */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -285,17 +286,19 @@
         
         h1 {
             font-size: clamp(3.2rem, 8vw, 6rem);
-            margin-bottom: 1rem;
+            margin-bottom: 0.5rem; /* Reduced margin */
             animation: text-shimmer 5s linear infinite, fadeInUp 0.8s ease-out 0.2s;
             text-align: left;
         }
         .subtitle {
             animation: fadeInUp 0.8s ease-out 0.4s;
             text-align: left;
+            margin-bottom: 0.5rem; /* Reduced margin */
         }
         .tagline {
             animation: text-shimmer 5s linear infinite, fadeInUp 0.8s ease-out 0.6s;
             text-align: left;
+            margin-bottom: 1.5rem; /* Reduced margin */
         }
         .hero-btn {
             animation: fadeInUp 0.8s ease-out 0.8s;
@@ -806,7 +809,7 @@
     <main>
         <section id="home" class="page active">
             <div class="page-content-wrapper">
-                <!-- MODIFIED: The main hero content is now in a two-column container -->
+                <!-- MODIFIED: Reduced gap and padding for a more compact hero section -->
                 <div class="home-hero-container">
                     <!-- Left column for the logo and button -->
                     <div class="home-hero-logo">
