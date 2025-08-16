@@ -218,8 +218,9 @@
         .home-hero-logo {
             flex: 1;
             display: flex;
-            justify-content: center;
+            flex-direction: column;
             align-items: center;
+            justify-content: center;
         }
 
         /* New hero animations, replacing the old `animate-on-scroll` on these elements */
@@ -238,6 +239,7 @@
             max-width: 450px;
             height: auto;
             animation: zoomIn 0.8s ease-out;
+            margin-bottom: 2rem;
         }
         
         .main-logo-img {
@@ -649,10 +651,14 @@
         .contact-email:hover {
             color: var(--primary-color);
         }
+        .contact-email:hover svg {
+            transform: scale(1.1);
+        }
 
         .contact-email svg {
             width: 28px;
             height: 28px;
+            transition: transform 0.3s ease;
         }
 
         /* --- New Scroll Animation Keyframes --- */
@@ -687,6 +693,11 @@
         .objective-item.animate-on-scroll.is-visible {
             animation: slideInUp 0.8s ease-out forwards;
             animation-delay: calc(0.1s * var(--i));
+        }
+        .design-features-list li.animate-on-scroll.is-visible,
+        .focus-area-item.animate-on-scroll.is-visible {
+             animation: popIn 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+             animation-delay: calc(0.1s * var(--i));
         }
 
         .team-member.animate-on-scroll {
@@ -759,8 +770,7 @@
 
     <nav class="main-nav">
         <a href="#home" class="nav-logo-link page-nav-btn">
-            <!-- Updated logo URL from the provided image -->
-            <img src="https://storage.googleapis.com/assist-services-assets/image_db512d.png-c587f9e5-4e86-47f2-a17a-742ade2b911f" alt="Access Insight Logo" class="nav-logo">
+            <img src="logo.png" alt="Access Insight Logo" class="nav-logo">
         </a>
         <div class="nav-links">
             <a href="#home" class="page-nav-btn active">Home</a>
@@ -776,19 +786,18 @@
             <div class="page-content-wrapper">
                 <!-- MODIFIED: The main hero content is now in a two-column container -->
                 <div class="home-hero-container">
-                    <!-- Left column for the logo -->
+                    <!-- Left column for the logo and button -->
                     <div class="home-hero-logo">
                         <div class="logo-container">
-                            <!-- Updated logo URL from the provided image -->
-                            <img src="https://storage.googleapis.com/assist-services-assets/image_db512d.png-c587f9e5-4e86-47f2-a17a-742ade2b911f" alt="Access Insight Icon" class="main-logo-img">
+                            <img src="logo.png" alt="Access Insight Icon" class="main-logo-img">
                         </div>
+                         <a href="#tool" class="btn page-nav-btn hero-btn">Explore The Tool</a>
                     </div>
-                    <!-- Right column for the text and button -->
+                    <!-- Right column for the text -->
                     <div class="home-hero-content">
                         <h1 class="hero-text">Access Insight</h1>
-                        <p class="subtitle hero-text">Revolutionizing Patient Care Through Artificial Intelligence</p>
                         <p class="tagline hero-text">Your Health, Clarified.</p>
-                        <a href="#tool" class="btn page-nav-btn hero-btn">Explore The Tool</a>
+                        <p class="subtitle hero-text">Revolutionizing Patient Care Through Artificial Intelligence</p>
                     </div>
                 </div>
             </div>
@@ -809,7 +818,7 @@
                         <div class="feature-node animate-on-scroll" style="--i:1;"><div class="feature-node-icon"><svg><use href="#icon-globe-nodes"></use></svg></div><div class="feature-node-text"><h4>Culturally Relevant Content</h4><p>Specifically designed to be resonant and understandable for diverse communities.</p></div></div>
                         <div class="feature-node animate-on-scroll" style="--i:2;"><div class="feature-node-icon"><svg><use href="#icon-mobile"></use></svg></div><div class="feature-node-text"><h4>Mobile-First Design</h4><p>Fully accessible and optimized for a seamless experience on smartphones and tablets.</p></div></div>
                         <div class="feature-node animate-on-scroll" style="--i:3;"><div class="feature-node-icon"><svg><use href="#icon-book-glow"></use></svg></div><div class="feature-node-text"><h4>Personalized Education</h4><p>Tailored modules for specific medical conditions and treatments to improve understanding.</p></div></div>
-                        <div class="feature-node animate-on-scroll" style="--i:4;"><div class="feature-node-icon"><svg><use href="#icon-workflow"></use></svg></div><div class="feature-node-text"><h4>Patient-Centric Workflow</h4><p>Designed to integrate into a patient's daily routine to improve health understanding and management.</p></div></div>
+                        <div class="feature-node animate-on-scroll" style="--i:4;"><div class="feature-node-icon"><svg><use href="#icon-workflow"></use></use></svg></div><div class="feature-node-text"><h4>Patient-Centric Workflow</h4><p>Designed to integrate into a patient's daily routine to improve health understanding and management.</p></div></div>
                         <div class="feature-node animate-on-scroll" style="--i:5;"><div class="feature-node-icon"><svg><use href="#icon-reading-level"></use></svg></div><div class="feature-node-text"><h4>Reading Level Optimization</h4><p>Content is intelligently adapted to appropriate literacy levels for clear communication.</p></div></div>
                     </div>
                 </div>
@@ -910,10 +919,11 @@
                 const formStatus = document.getElementById('form-status');
                 const contactForm = document.getElementById('contact-form');
                 
+                // Fixed logo source paths
                 const logoImg = document.querySelector('.main-logo-img');
                 const navLogoImg = document.querySelector('.nav-logo');
-                if (logoImg) logoImg.src = "https://storage.googleapis.com/assist-services-assets/image_db512d.png-c587f9e5-4e86-47f2-a17a-742ade2b911f";
-                if (navLogoImg) navLogoImg.src = "https://storage.googleapis.com/assist-services-assets/image_db512d.png-c587f9e5-4e86-47f2-a17a-742ade2b911f";
+                if (logoImg) logoImg.src = "logo.png";
+                if (navLogoImg) navLogoImg.src = "logo.png";
 
 
                 /**
