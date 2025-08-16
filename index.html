@@ -48,6 +48,16 @@
             100% { transform: translate(-50%, -50%) rotate(-360deg) translateX(200px) rotate(360deg); }
         }
 
+        /* NEW: Floating animation for background blobs */
+        @keyframes float-up-down {
+            0%, 100% { top: 40%; }
+            50% { top: 45%; }
+        }
+        @keyframes float-up-down-2 {
+            0%, 100% { top: 45%; }
+            50% { top: 40%; }
+        }
+
         body::before, body::after {
             content: '';
             position: fixed;
@@ -63,14 +73,14 @@
 
         body::before {
             background: var(--primary-color);
-            animation: moveInCircle 15s linear infinite;
+            animation: moveInCircle 15s linear infinite, float-up-down 10s ease-in-out infinite;
         }
 
         body::after {
             background: var(--secondary-color);
             width: 50vmax;
             height: 50vmax;
-            animation: moveInCircle2 20s linear infinite;
+            animation: moveInCircle2 20s linear infinite, float-up-down-2 12s ease-in-out infinite;
         }
 
         /* --- Text "Lightning" / Shimmer Animation --- */
@@ -181,12 +191,11 @@
         .page {
             width: 100%;
             min-height: 100vh;
-            /* MODIFIED: Reduced padding top to remove extra space */
-            padding: 80px 5% 5rem;
+            padding: 100px 5% 2rem;
             display: none;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
             animation: fadeIn 0.6s ease-in-out;
             position: relative;
             z-index: 1;
@@ -208,7 +217,7 @@
             align-items: center;
             justify-content: center;
         }
-        /* --- NEW: Logo hover effect --- */
+        
         @keyframes logoHover {
             0% { transform: scale(1) rotate(0deg); }
             50% { transform: scale(1.05) rotate(2deg); }
@@ -219,34 +228,31 @@
             animation: logoHover 0.8s ease-in-out;
         }
         
-        /* --- MODIFIED: Tighter two-column layout for the home page header --- */
         .home-hero-container {
             display: flex;
             align-items: center;
-            justify-content: center; /* Centering the content horizontally */
-            gap: 1.5rem; /* Reduced gap */
-            padding-top: 3rem; /* Reduced padding */
-            padding-bottom: 3rem; /* Reduced padding */
-            min-height: calc(100vh - 80px); /* Re-added min-height to ensure it fills the page on empty sections */
+            justify-content: center; 
+            gap: 1.5rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
             width: 100%;
-            flex-wrap: wrap; /* Allow wrapping on small screens */
+            flex-wrap: wrap; 
         }
         .home-hero-content {
-            flex: 1 1 50%; /* Flexible sizing to allow it to grow */
+            flex: 1 1 50%; 
             display: flex;
             flex-direction: column;
             align-items: flex-start;
             text-align: left;
         }
         .home-hero-logo {
-            flex: 1 1 40%; /* Flexible sizing for the logo column */
+            flex: 1 1 40%; 
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
         }
 
-        /* New hero animations, replacing the old `animate-on-scroll` on these elements */
         @keyframes fadeInUp {
             from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
@@ -256,13 +262,12 @@
             to { opacity: 1; transform: scale(1); }
         }
 
-
         .logo-container {
             width: 100%;
             max-width: 450px;
             height: auto;
             animation: zoomIn 0.8s ease-out;
-            margin-bottom: 2rem;
+            margin-bottom: 1.5rem;
         }
         
         .main-logo-img {
@@ -286,19 +291,19 @@
         
         h1 {
             font-size: clamp(3.2rem, 8vw, 6rem);
-            margin-bottom: 0.5rem; /* Reduced margin */
+            margin-bottom: 0.5rem;
             animation: text-shimmer 5s linear infinite, fadeInUp 0.8s ease-out 0.2s;
             text-align: left;
         }
         .subtitle {
             animation: fadeInUp 0.8s ease-out 0.4s;
             text-align: left;
-            margin-bottom: 0.5rem; /* Reduced margin */
+            margin-bottom: 0.5rem;
         }
         .tagline {
             animation: text-shimmer 5s linear infinite, fadeInUp 0.8s ease-out 0.6s;
             text-align: left;
-            margin-bottom: 1.5rem; /* Reduced margin */
+            margin-bottom: 1.5rem;
         }
         .hero-btn {
             animation: fadeInUp 0.8s ease-out 0.8s;
@@ -311,7 +316,6 @@
         .home-hero-content .subtitle, .home-hero-content .tagline {
             max-width: none;
         }
-
 
         h2 {
             font-size: clamp(2.7rem, 6vw, 4.4rem);
@@ -360,6 +364,8 @@
             margin-bottom: 2rem;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            /* NEW: Added for 3D tilt effect */
+            transform-style: preserve-3d;
         }
         .card:hover {
             transform: translateY(-5px);
@@ -414,7 +420,6 @@
             text-align: center;
             transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
-        /* New hover effect for feature nodes */
         .feature-node:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.08);
@@ -580,6 +585,7 @@
             border-radius: 16px;
             border: 1px solid var(--border-color);
             transition: transform 0.3s ease, background 0.3s ease, box-shadow 0.3s ease;
+            transform-style: preserve-3d; /* NEW: for 3D tilt */
         }
 
         .team-member:hover {
@@ -588,7 +594,6 @@
             box-shadow: 0 10px 25px rgba(26, 58, 74, 0.1);
         }
 
-        /* --- Team Member Hover Animation --- */
         .team-member-avatar {
             width: 140px;
             height: 140px;
@@ -758,8 +763,8 @@
             }
             .page {
                 padding: 100px 5% 5rem;
+                justify-content: flex-start;
             }
-            /* Stack the hero content on small screens */
             .home-hero-container {
                 flex-direction: column;
                 justify-content: center;
@@ -795,6 +800,7 @@
 
     <nav class="main-nav">
         <a href="#home" class="nav-logo-link page-nav-btn">
+            <!-- UPDATED: Pointing to local logo.png -->
             <img src="logo.png" alt="Access Insight Logo" class="nav-logo">
         </a>
         <div class="nav-links">
@@ -809,16 +815,14 @@
     <main>
         <section id="home" class="page active">
             <div class="page-content-wrapper">
-                <!-- MODIFIED: Adjusted padding and margin to reduce overall whitespace -->
                 <div class="home-hero-container">
-                    <!-- Left column for the logo and button -->
                     <div class="home-hero-logo">
                         <div class="logo-container">
+                            <!-- UPDATED: Pointing to local logo.png -->
                             <img src="logo.png" alt="Access Insight Icon" class="main-logo-img">
                         </div>
                          <a href="#tool" class="btn page-nav-btn hero-btn">Explore The Tool</a>
                     </div>
-                    <!-- Right column for the text -->
                     <div class="home-hero-content">
                         <h1 class="hero-text">Access Insight</h1>
                         <p class="tagline hero-text">Your Health, Clarified.</p>
@@ -935,7 +939,6 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Self-executing function to avoid global scope pollution
             (function() {
                 // --- Navigation Logic ---
                 const navButtons = document.querySelectorAll('.page-nav-btn');
@@ -944,24 +947,18 @@
                 const formStatus = document.getElementById('form-status');
                 const contactForm = document.getElementById('contact-form');
                 
-                // Fixed logo source paths
                 const logoImg = document.querySelector('.main-logo-img');
                 const navLogoImg = document.querySelector('.nav-logo');
+                // Make sure you have a 'logo.png' file in the same directory
                 if (logoImg) logoImg.src = "logo.png";
                 if (navLogoImg) navLogoImg.src = "logo.png";
 
-
-                /**
-                 * Switches the active page based on the target ID.
-                 * @param {string} targetId The ID of the page section to show.
-                 */
                 function showPage(targetId) {
                     try {
                         pages.forEach(page => page.classList.remove('active'));
                         const newPage = document.getElementById(targetId);
                         if (newPage) {
                             newPage.classList.add('active');
-                            // Trigger animations for the newly shown page
                             setupScrollAnimations(newPage);
                         } else {
                             console.error(`Page with ID "${targetId}" not found.`);
@@ -973,7 +970,10 @@
                                 link.classList.add('active');
                             }
                         });
-                        window.scrollTo(0, 0);
+                        
+                        if (targetId !== 'home') {
+                            window.scrollTo(0, 0);
+                        }
 
                     } catch (error) {
                         console.error("Error in showPage function:", error);
@@ -988,25 +988,21 @@
                     });
                 });
 
-
                 // --- Form Handling ---
-                contactForm.addEventListener('submit', function(e) {
-                    e.preventDefault();
-                    formStatus.style.color = 'var(--secondary-color)';
-                    formStatus.textContent = 'Sending message...';
-                    
-                    // This is a placeholder for form submission
-                    setTimeout(() => {
-                        formStatus.textContent = 'Thank you! Your message has been sent.';
-                        contactForm.reset();
-                    }, 1500);
-                });
+                if (contactForm) {
+                    contactForm.addEventListener('submit', function(e) {
+                        e.preventDefault();
+                        formStatus.style.color = 'var(--secondary-color)';
+                        formStatus.textContent = 'Sending message...';
+                        
+                        setTimeout(() => {
+                            formStatus.textContent = 'Thank you! Your message has been sent.';
+                            contactForm.reset();
+                        }, 1500);
+                    });
+                }
 
                 // --- Intersection Observer for Scroll Animations ---
-                /**
-                 * Sets up the Intersection Observer to handle scroll-based animations.
-                 * @param {Element} context The element container to observe for animated elements.
-                 */
                 function setupScrollAnimations(context) {
                     const animatedElements = context.querySelectorAll('.animate-on-scroll');
                     
@@ -1017,18 +1013,42 @@
                             }
                         });
                     }, {
-                        threshold: 0.1 // Trigger when 10% of the element is visible
+                        threshold: 0.1
                     });
 
                     animatedElements.forEach((el, index) => {
-                        // Apply staggered delay for grid and list items
                         el.style.setProperty('--i', index);
                         observer.observe(el);
                     });
                 }
+                
+                // --- NEW: 3D Tilt Effect for Cards ---
+                function apply3DTilt() {
+                    const tiltableElements = document.querySelectorAll('.card, .team-member');
+                    tiltableElements.forEach(el => {
+                        el.addEventListener('mousemove', (e) => {
+                            const rect = el.getBoundingClientRect();
+                            const x = e.clientX - rect.left;
+                            const y = e.clientY - rect.top;
+                            const { width, height } = rect;
+                            const rotateX = (y / height - 0.5) * -15; // Max rotation 7.5 deg
+                            const rotateY = (x / width - 0.5) * 15;  // Max rotation 7.5 deg
+                            
+                            el.style.transition = 'transform 0.1s ease-out';
+                            el.style.transform = `perspective(1000px) rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.03, 1.03, 1.03)`;
+                        });
 
-                // Initially show the home page and set up its animations
+                        el.addEventListener('mouseleave', () => {
+                            el.style.transition = 'transform 0.5s ease-in-out';
+                            el.style.transform = 'perspective(1000px) rotateX(0) rotateY(0) scale3d(1, 1, 1)';
+                        });
+                    });
+                }
+
+                // --- Initial Setup ---
                 showPage('home');
+                apply3DTilt();
+
             })();
         });
     </script>
